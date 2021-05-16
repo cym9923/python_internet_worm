@@ -1,0 +1,66 @@
+import urllib.request
+import urllib.parse
+import time
+import re
+import base64
+import requests
+import os
+if not os.path.exists('C:/Users/99239/Desktop/ooxx'):
+    os.mkdir('C:/Users/99239/Desktop/ooxx')
+
+url = 'http://jandan.net/ooxx/'
+headers = {}
+headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.104 Safari/537.36'
+
+#因为jiandan/ooxx 使用了base64加密网址，导致折腾了好久 在这个文件中解决了:)
+def url_open(url):
+    a = urllib.request.Request(url, headers=headers)
+    b = urllib.request.urlopen(a).read().decode('utf-8')
+    save_imgs(b)
+def start(): #找到页数
+    a = urllib.request.Request(url, headers=headers)
+    b = urllib.request.urlopen(a).read().decode('utf-8')
+    a = str(re.findall('"current-comment-page.+', b))
+    #此处使用了小甲鱼的方式查找，没用正则，也懒得改了，偷个懒
+    num = a[27:29]
+    get_page(num)
+
+def save_imgs(html):
+    a = re.findall('a href="(//wx[\d].sinaimg.cn/large/.+?\.jpg)" target', html)
+    img = []
+    b = 'http:'
+    for each in a:
+        imgadress = b + each
+        img.append(imgadress)
+
+    for each in img:
+        name = each.split('/')[-1]
+        last = requests.get(each,headers=headers)
+        filename = 'C://Users\99239\Desktop\ooxx/'+ name
+        with open(filename,'wb') as f:
+            f.write(last.content)
+
+
+def get_page(num):
+    t = time.gmtime()
+    year = t.tm_year
+    mon = t.tm_mon
+    day = t.tm_mday
+    if mon <10:
+        mon = '0%d'%mon
+    if day < 10:
+        day = '0%d'%day
+    times = str(year)+str(mon)+str(day)
+    pages = int(input('输入下载的页数'))
+    num = int(pages)
+    for i in range(pages):
+        a = num - i
+        b = (''.join([times,'-',str(a)])) #此处base64解密 加减
+        c = b.encode("utf-8")
+        d = base64.b64encode(c).decode()
+        page_url = url + d +'#comments'
+        print(page_url)
+        url_open(page_url)
+
+if __name__=='__main__':
+    start()
