@@ -8,7 +8,7 @@ import os
 if not os.path.exists('C:/Users/99239/Desktop/ooxx'):
     os.mkdir('C:/Users/99239/Desktop/ooxx')
 
-url = 'http://jandan.net/ooxx/'
+url = 'http://jandan.net/girl/'
 headers = {}
 headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.104 Safari/537.36'
 
@@ -51,7 +51,7 @@ def get_page(num):
     if day < 10:
         day = '0%d'%day
     times = str(year)+str(mon)+str(day)
-    pages = int(input('输入下载的页数'))
+    pages = int(input('输入下载的页数（尽量 小于3，一页真的很多！)'))
     num = int(pages)
     for i in range(pages):
         a = num - i
@@ -63,4 +63,5 @@ def get_page(num):
         url_open(page_url)
 
 if __name__=='__main__':
+    print(“为了安全尽量使用time.sleep()，防止被ban")
     start()
