@@ -63,5 +63,5 @@ def get_page(num):
         url_open(page_url)
 
 if __name__=='__main__':
-    print(“为了安全尽量使用time.sleep()，防止被ban")
+    print("为了安全尽量使用time.sleep()，防止被ban")
     start()
